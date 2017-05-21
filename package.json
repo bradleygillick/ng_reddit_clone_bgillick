@@ -1,7 +1,7 @@
 {
   "name": "reddit-clone-solution",
   "version": "1.0.0",
-  "author": "Galvanize <info@galvanize.com>",
+  "author": "BGillick <bradleygillick@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "lite-server"
