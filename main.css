@@ -1,0 +1,22 @@
+
+.media-object {
+  max-width: 200px;
+}
+
+[ng-click] {
+  cursor: pointer;
+}
+
+.search-form {
+  margin-top: 4px;
+}
+
+main.container {
+  margin-bottom: 4em;
+}
+
+.post-image {
+  height: 200px;
+  width: 280px;
+  margin-right: 20px;
+}
