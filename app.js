@@ -4,6 +4,7 @@ angular.module("app", [])
 
     controller: function () {
       const vm = this
+      vm.showForm = false
 
       vm.$onInit = function () {
         vm.posts = [{
@@ -12,36 +13,38 @@ angular.module("app", [])
           body: "This is the greatest post to ever be posted",
           author: "Brad Gillick",
           imageUrl: "https://images.pexels.com/photos/10651/photo-1432821596592-e2c18b78144f.jpeg?h=350&auto=compress&cs=tinysrgb",
-          time:"05-20-2017",
-          comments:"Super cool, dude!"
+          time: "05-20-2017",
+          comments: ["Super cool, dude!"]
+        }, {
+          title: "The second Post",
+          votes: 50,
+          body: "This is actually the greatest post to ever be posted and should be displayed first",
+          author: "Matt Gillick",
+          imageUrl: "https://images.pexels.com/photos/203885/pexels-photo-203885.jpeg?h=350&auto=compress&cs=tinysrgb",
+          time: "10-28-2016",
+          comments: ["Super cool, matt!", "Way to go!"]
         }]
-        vm.showForm = false
       }
 
       vm.submitForm = function () {
         vm.post.time = new Date()
-        vm.post.comments = ""
+        vm.post.comments = []
         vm.post.votes = 0
         vm.posts.push(vm.post)
+        vm.toggleNewPost()
         delete vm.post
       }
 
       vm.toggleNewPost = function () {
-        if (vm.showForm === true) {
-          vm.showForm = false
-        }
-        else {
-          vm.showForm = true
-        }
+        vm.showForm = !vm.showForm
       }
     },
-
     template: `
     <nav class="navbar navbar-default">
     <div class="container">
       <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
-          aria-expanded="false">
+          aria-expanded="false">w
         <span class="sr-only">Toggle navigation</span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -60,16 +63,16 @@ angular.module("app", [])
     <div class="pull-right">
       <p><a id="post-button" ng-click="$ctrl.toggleNewPost()" class="btn btn-info">New Post</a></p>
     </div>
-
     <ul  class="nav nav-pills">
       <li role="presentation" class="active">
-        <input type="search" class="form-control input-sm search-form" placeholder="Filter">
+        <input ng-model="$ctrl.filterText" class="form-control input-sm search-form" placeholder="Filter">
       </li>
-      <div class="form-inline">
+
+      <div ng-model="$ctrl.sortProperty" class="form-inline">
         <label for="sort">  Sort by </label>
         <select class="form-control" id="sort">
-        <option>Some text</option>
-        <option>Some text</option>
+        <option>Title</option>
+        <option>Date posted</option>
       </select>
       </div>
     </ul>
@@ -104,7 +107,7 @@ angular.module("app", [])
       </div>
     </div>
 
-    <div ng-repeat="post in $ctrl.posts">
+    <div ng-repeat="post in $ctrl.posts | orderBy:$sortProperty:true | filter:$ctrl.filterText">
     <div class="row">
       <div class="col-md-12">
 
@@ -116,8 +119,8 @@ angular.module("app", [])
             <img class="pull-left post-image" src="{{post.imageUrl}}" alt="Post Image">
             <h4 class="media-heading">
               {{post.title}} |
-              <a><i class="glyphicon glyphicon-arrow-up"></i></a>
-              <a><i class="glyphicon glyphicon-arrow-down"></i></a> {{post.votes}}
+              <a ng-click="post.votes = post.votes + 1"><i class="glyphicon glyphicon-arrow-up"></i></a>
+              <a ng-click="post.votes = post.votes - 1"><i class="glyphicon glyphicon-arrow-down"></i></a> {{post.votes}}
             </h4>
             <div class="text-right">
               {{post.author}}
@@ -128,16 +131,19 @@ angular.module("app", [])
             <div>
               {{post.time}} |
               <i class="glyphicon glyphicon-comment"></i>
-              <a>
-              View all comments
+              <a ng-click="showComments = !showComments">
+              <ng-pluralize
+                count="post.comments.length"
+                when="{'0': '0 Comments', 'one': '1 Comment', 'other': '{} Comments'}">
+              </ng-pluralize>
             </a>
             </div>
-            <div class="row">
+            <div ng-if="showComments" class="row">
               <div class="col-md-offset-1">
                 <hr>
-                <p>
-                  Comment text
-                </p>
+                <p ng-repeat="comment in post.comments">
+                {{comment}}
+              </p>
                 <form class="form-inline">
                   <div class="form-group">
                     <input class="form-control">
