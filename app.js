@@ -116,7 +116,7 @@ angular.module("app", [])
             <img class="media-object">
           </div>
           <div class="media-body">
-            <img class="pull-left post-image" src="{{post.imageUrl}}" alt="Post Image">
+            <img class="pull-left post-image" ng-src="{{post.imageUrl}}" alt="Post Image">
             <h4 class="media-heading">
               {{post.title}} |
               <a ng-click="post.votes = post.votes + 1"><i class="glyphicon glyphicon-arrow-up"></i></a>
